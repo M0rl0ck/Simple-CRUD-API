@@ -1,5 +1,15 @@
 import type { IncomingMessage } from "http";
+import { BAD_REQUEST_BODY } from "../errors/errors";
 import { STATUS_CODES, BASE_URL, SERVER_MESSAGES } from "../constants";
+import { validateUid } from "./utils";
+import {
+  changeUser,
+  createUser,
+  deleteUser,
+  getUser,
+  getUsers,
+} from "./handlers";
+import { handleError } from "./utils";
 
 const METHODS = {
   GET: "GET",
@@ -33,21 +43,18 @@ const handleRoutes = async (req: IncomingMessage) => {
         body = buffer.length
           ? JSON.parse(Buffer.concat(buffer).toString())
           : {};
-      } catch (error) {
-        console.log(error);
-        throw new Error();
+      } catch {
+        throw new BAD_REQUEST_BODY();
       }
 
       if (endpointLength === 2) {
         switch (req.method) {
           case METHODS.GET: {
-            status = STATUS_CODES.OK;
-            message = "all users";
+            ({ status, message } = getUsers());
             break;
           }
           case METHODS.POST: {
-            status = STATUS_CODES.CREATED;
-            message = JSON.stringify(body);
+            ({ status, message } = createUser(body));
             break;
           }
           default: {
@@ -62,20 +69,20 @@ const handleRoutes = async (req: IncomingMessage) => {
 
         switch (req.method) {
           case METHODS.GET: {
-            status = STATUS_CODES.OK;
-            message = `user ${uid}`;
+            validateUid(uid);
+            ({ status, message } = getUser(uid));
             break;
           }
 
           case METHODS.PUT: {
-            status = STATUS_CODES.OK;
-            message = JSON.stringify(body);
+            validateUid(uid);
+            ({ status, message } = changeUser(uid, body));
 
             break;
           }
           case METHODS.DELETE: {
-            status = STATUS_CODES.NO_CONTENT;
-            message = "user deleted";
+            validateUid(uid);
+            ({ status, message } = deleteUser(uid));
             break;
           }
           default: {
@@ -89,7 +96,7 @@ const handleRoutes = async (req: IncomingMessage) => {
       message = JSON.stringify({ message: SERVER_MESSAGES.ENDPOINT_NOT_FOUND });
     }
   } catch (error) {
-    console.log(error);
+    ({ status, message } = handleError(error));
   }
 
   return {
