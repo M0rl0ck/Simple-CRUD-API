@@ -14,4 +14,4 @@ const startServer = (PORT: string) => {
   console.log(`Server started on http://localhost:${PORT}`);
 };
 
-export { startServer };
+export { startServer, server };
