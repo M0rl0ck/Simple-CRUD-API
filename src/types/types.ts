@@ -15,4 +15,4 @@ interface IDB {
   deleteUser: (id: string) => boolean;
 }
 
-export { IUser, NewUser, IDB };
+export type { IUser, NewUser, IDB };
