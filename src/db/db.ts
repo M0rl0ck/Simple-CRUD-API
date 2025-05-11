@@ -40,7 +40,7 @@ class DB implements IDB {
   }
 
   async deleteUser(id: string) {
-    if (!this.getUser(id)) {
+    if (!(await this.getUser(id))) {
       return false;
     }
     this.users = this.users.filter((user) => user.id !== id);
