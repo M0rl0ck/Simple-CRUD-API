@@ -6,7 +6,8 @@
   "scripts": {
     "start:dev": "nodemon",
     "start:prod": "webpack && node ./dist/index.js",
-    "test": "jest -silent"
+    "test": "jest -silent",
+    "start:multi": "nodemon -- -multi"
   },
   "repository": {
     "type": "git",

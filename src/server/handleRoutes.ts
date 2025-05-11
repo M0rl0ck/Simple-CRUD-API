@@ -50,11 +50,11 @@ const handleRoutes = async (req: IncomingMessage) => {
       if (endpointLength === 2) {
         switch (req.method) {
           case METHODS.GET: {
-            ({ status, message } = getUsers());
+            ({ status, message } = await getUsers());
             break;
           }
           case METHODS.POST: {
-            ({ status, message } = createUser(body));
+            ({ status, message } = await createUser(body));
             break;
           }
           default: {
@@ -70,19 +70,19 @@ const handleRoutes = async (req: IncomingMessage) => {
         switch (req.method) {
           case METHODS.GET: {
             validateUid(uid);
-            ({ status, message } = getUser(uid));
+            ({ status, message } = await getUser(uid));
             break;
           }
 
           case METHODS.PUT: {
             validateUid(uid);
-            ({ status, message } = changeUser(uid, body));
+            ({ status, message } = await changeUser(uid, body));
 
             break;
           }
           case METHODS.DELETE: {
             validateUid(uid);
-            ({ status, message } = deleteUser(uid));
+            ({ status, message } = await deleteUser(uid));
             break;
           }
           default: {

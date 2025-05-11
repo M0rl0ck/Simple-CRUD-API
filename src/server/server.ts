@@ -9,7 +9,7 @@ const server = createServer(async (req, res) => {
   res.writeHead(status);
   res.end(message);
 });
-const startServer = (PORT: string) => {
+const startServer = (PORT: number) => {
   server.listen(PORT);
   console.log(`Server started on http://localhost:${PORT}`);
 };

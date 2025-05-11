@@ -11,14 +11,14 @@ class DB implements IDB {
     return this.users.findIndex((user) => user.id === id);
   }
 
-  getAllUsers() {
+  async getAllUsers() {
     return this.users;
   }
-  getUser(id: string) {
+  async getUser(id: string) {
     return this.users.find((user) => user.id === id);
   }
 
-  addUser(newUser: NewUser) {
+  async addUser(newUser: NewUser) {
     const { username, age, hobbies } = newUser;
     const user = {
       username,
@@ -30,7 +30,7 @@ class DB implements IDB {
     return user;
   }
 
-  changeUser(id: string, changes: NewUser) {
+  async changeUser(id: string, changes: NewUser) {
     const index = this.findUser(id);
     if (index === -1) {
       return false;
@@ -39,7 +39,7 @@ class DB implements IDB {
     return this.users[index];
   }
 
-  deleteUser(id: string) {
+  async deleteUser(id: string) {
     if (!this.getUser(id)) {
       return false;
     }
@@ -49,3 +49,4 @@ class DB implements IDB {
 }
 
 export { DB };
+export default DB;

@@ -8,11 +8,11 @@ interface IUser extends NewUser {
 }
 
 interface IDB {
-  getAllUsers: () => IUser[];
-  getUser: (id: string) => IUser | undefined;
-  addUser: (newUser: NewUser) => IUser;
-  changeUser: (id: string, changes: NewUser) => IUser | false;
-  deleteUser: (id: string) => boolean;
+  getAllUsers: () => Promise<IUser[]>;
+  getUser: (id: string) => Promise<IUser | undefined>;
+  addUser: (newUser: NewUser) => Promise<IUser>;
+  changeUser: (id: string, changes: NewUser) => Promise<IUser | false>;
+  deleteUser: (id: string) => Promise<boolean>;
 }
 
 export type { IUser, NewUser, IDB };
