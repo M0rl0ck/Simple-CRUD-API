@@ -8,9 +8,19 @@
 
 `$ git clone https://github.com/M0rl0ck/Simple-CRUD-API`
 
+### Go to project directory:
+
+`$ cd Simple-CRUD-API`
+
 ### Go to branch develop:
 
 `$ git checkout develop`
+
+### Rename file `.env.example` to `.env`
+
+### Install dependence:
+
+`$ npm ci`
 
 ### Running the app
 
