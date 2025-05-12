@@ -2,6 +2,7 @@ import { startServer } from "./server";
 import { argv, env } from "node:process";
 import { availableParallelism } from "node:os";
 import cluster from "cluster";
+import { createBD } from "./db";
 import { startLoadBalancer } from "./load_balancer/load_balancer";
 import "dotenv/config";
 
@@ -16,6 +17,8 @@ if (args.includes("-multi") && cpus > 2) {
 
   if (cluster.isPrimary) {
     startLoadBalancer(cpus, PORT);
+  } else if (env.DB) {
+    createBD();
   } else {
     startServer(Number(process.env.WORKER_PORT));
   }

@@ -1,15 +1,12 @@
 // import { DB } from "../db/db";
 import { IDB } from "../types/types";
 import cluster, { Worker } from "cluster";
-import { fork } from "node:child_process";
-import { join } from "node:path";
 import http, { createServer } from "http";
 
 const startLoadBalancer = (cpus: number, PORT: number) => {
   const workers: { worker: Worker; PORT: number }[] = [];
 
-  const pathToWorkerDb = join(__dirname, "..", "db", "child_pr_db.ts");
-  const worker_db = fork(pathToWorkerDb);
+  const worker_db = cluster.fork({ DB: true });
 
   for (let i = 0; i < cpus; i++) {
     const WORKER_PORT = PORT + i + 1;
