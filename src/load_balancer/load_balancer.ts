@@ -1,12 +1,15 @@
-import { DB } from "../db/db";
+// import { DB } from "../db/db";
 import { IDB } from "../types/types";
 import cluster, { Worker } from "cluster";
+import { fork } from "node:child_process";
+import { join } from "node:path";
 import http, { createServer } from "http";
 
 const startLoadBalancer = (cpus: number, PORT: number) => {
   const workers: { worker: Worker; PORT: number }[] = [];
 
-  const db = new DB();
+  const pathToWorkerDb = join(__dirname, "..", "db", "child_pr_db.ts");
+  const worker_db = fork(pathToWorkerDb);
 
   for (let i = 0; i < cpus; i++) {
     const WORKER_PORT = PORT + i + 1;
@@ -20,15 +23,10 @@ const startLoadBalancer = (cpus: number, PORT: number) => {
       workerNote = newWorkerNote;
     });
     worker.on("message", (message: { cmd: keyof IDB; props: unknown[] }) => {
-      if (message.cmd in db) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        db[message.cmd](...(message.props ? message.props : [])).then(
-          (result) => {
-            worker.send({ data: result });
-          },
-        );
-      }
+      worker_db.send(message);
+      worker_db.once("message", (data) => {
+        worker.send(data);
+      });
     });
   }
 
